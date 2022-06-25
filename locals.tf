@@ -61,6 +61,9 @@ locals {
   # the rest of the subnets are for agent nodes in each nodepools.
   network_ipv4_subnets = [for index in range(256) : cidrsubnet(local.network_ipv4_cidr, 8, index)]
 
+  # automatically asing network region based on server locations
+  network_region      = contains([for index in concat(var.control_plane_nodepools, var.agent_nodepools) : index.location ], "ash") ? "us-east" : "eu-central"
+
   # if we are in a single cluster config, we use the default klipper lb instead of Hetzner LB
   control_plane_count    = sum([for v in var.control_plane_nodepools : v.count])
   agent_count            = sum([for v in var.agent_nodepools : v.count])

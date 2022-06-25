@@ -20,7 +20,7 @@ resource "hcloud_network_subnet" "control_plane" {
   count        = length(var.control_plane_nodepools)
   network_id   = hcloud_network.k3s.id
   type         = "cloud"
-  network_zone = var.network_region
+  network_zone = local.network_region
   ip_range     = local.network_ipv4_subnets[255 - count.index]
 }
 
@@ -29,7 +29,7 @@ resource "hcloud_network_subnet" "agent" {
   count        = length(var.agent_nodepools)
   network_id   = hcloud_network.k3s.id
   type         = "cloud"
-  network_zone = var.network_region
+  network_zone = local.network_region
   ip_range     = local.network_ipv4_subnets[count.index]
 }
 

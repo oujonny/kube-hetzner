@@ -30,6 +30,10 @@ variable "hcloud_ssh_key_id" {
 variable "network_region" {
   description = "Default region for network"
   type        = string
+  validation {
+    condition = "eu-central" || "us-east"
+    error_message = "The network region must be either eu-central or us-east. See: https://docs.hetzner.com/cloud/general/locations"
+  }
   default     = "eu-central"
 }
 
