@@ -198,7 +198,8 @@ resource "null_resource" "kustomization" {
 
   # Upload generic kuberentes yaml files
   provisioner "file" {
-    content = concat([for index in var.generic_post_deployments : contact("---\n", index) ])
+    content     = concat([for index in var.generic_post_deployments : contact("---\n", index)])
+    destination = "/var/post_install/generic_post_deployments.yaml"
   }
 
   # Deploy secrets, logging is automatically disabled due to sensitive variables
