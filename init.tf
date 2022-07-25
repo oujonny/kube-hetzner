@@ -196,6 +196,11 @@ resource "null_resource" "kustomization" {
     destination = "/var/post_install/rancher.yaml"
   }
 
+  # Upload generic kuberentes yaml files
+  provisioner "file" {
+    content = concat([for index in var.generic_post_deployments : contact("---\n", index) ])
+  }
+
   # Deploy secrets, logging is automatically disabled due to sensitive variables
   provisioner "remote-exec" {
     inline = [
