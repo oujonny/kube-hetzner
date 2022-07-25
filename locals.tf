@@ -140,15 +140,6 @@ locals {
       ]
     },
 
-    # Allow ping on ipv4
-    {
-      direction = "in"
-      protocol  = "icmp"
-      source_ips = [
-        "0.0.0.0/0"
-      ]
-    },
-
     # Allow basic out traffic
     # ICMP to ping outside services
     {
@@ -219,6 +210,14 @@ locals {
       direction = "in"
       protocol  = "tcp"
       port      = "443"
+      source_ips = [
+        "0.0.0.0/0"
+      ]
+    }
+    ], var.block_icmp_ping_in ? [] : [
+    {
+      direction = "in"
+      protocol  = "icmp"
       source_ips = [
         "0.0.0.0/0"
       ]

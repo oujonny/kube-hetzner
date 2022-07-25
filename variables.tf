@@ -46,7 +46,7 @@ variable "load_balancer_location" {
 variable "load_balancer_type" {
   description = "Default load balancer server type"
   type        = string
-  default     = "cpx11"
+  default     = "lb11"
 }
 
 variable "load_balancer_disable_ipv6" {
@@ -253,4 +253,10 @@ variable "use_klipper_lb" {
   type        = bool
   default     = false
   description = "Use klipper load balancer"
+}
+
+variable "block_icmp_ping_in" {
+  type        = bool
+  default     = false
+  description = "Block ICMP ping in"
 }
