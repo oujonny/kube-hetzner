@@ -180,13 +180,18 @@ variable "placement_group_disable" {
 variable "disable_network_policy" {
   type        = bool
   default     = false
-  description = "Disable k3s default network policy controller (default false, automatically true for calico)"
+  description = "Disable k3s default network policy controller (default false, automatically true for calico and cilium)"
 }
 
 variable "cni_plugin" {
   type        = string
   default     = "flannel"
   description = "CNI plugin for k3s"
+
+  validation {
+    condition     = contains(["flannel", "calico", "cilium"], var.cni_plugin)
+    error_message = "cni_plugin must be one of \"flannel\", \"calico\", or \"cilium\""
+  }
 }
 
 variable "enable_longhorn" {
@@ -215,12 +220,12 @@ variable "enable_rancher" {
 
 variable "rancher_install_channel" {
   type        = string
-  default     = "stable"
+  default     = "latest"
   description = "Rancher install channel"
 
   validation {
-    condition     = contains(["stable", "latest", "alpha"], var.rancher_install_channel)
-    error_message = "The allowed values for the Rancher install channel are stable, latest, or alpha."
+    condition     = contains(["stable", "latest"], var.rancher_install_channel)
+    error_message = "The allowed values for the Rancher install channel are stable or latest."
   }
 }
 
@@ -266,4 +271,22 @@ variable "generic_post_deployments" {
   default     = [""]
   description = "Generic Kuberenetees YAML files which gets auto-applied after the deployment"
 
+}
+
+variable "use_control_plane_lb" {
+  type        = bool
+  default     = false
+  description = "When this is enabled, rather than the first node, all external traffic will be routed via a control-plane loadbalancer, allowing for high availability"
+}
+
+variable "dns_servers" {
+  type        = list(string)
+  default     = ["1.1.1.1", " 1.0.0.1", "8.8.8.8"]
+  description = "IP Addresses to use for the DNS Servers, set to an empty list to use the ones provided by Hetzner"
+}
+
+variable "extra_packages_to_install" {
+  type        = list(string)
+  default     = []
+  description = "A list of additional packages to install on nodes"
 }

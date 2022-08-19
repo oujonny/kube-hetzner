@@ -204,14 +204,14 @@ module "kube-hetzner" {
   # use_klipper_lb = "true"
 
   # If you want to configure a different CNI for k3s, use this flag
-  # possible values: flannel (Default), calico
-  # Cilium or other would be easy to add, you can mirror how Calico was added. PRs are welcome!
+  # possible values: flannel (Default), calico, and cilium
   # CAVEATS: Calico is not supported when not using the Hetzner LB (like when use_klipper_lb is set to true or when using a single node cluster),
   # because of the following issue https://github.com/k3s-io/klipper-lb/issues/6.
-  # cni_plugin = "calico"
+  # As for Cilium, we allow infinite configurations, please check the CNI section of the readme over at https://github.com/kube-hetzner/terraform-hcloud-kube-hetzner/#cni.
+  # cni_plugin = "cilium"
 
   # If you want to disable the k3s default network policy controller, use this flag!
-  # Calico overrides this value to true automatically, the default is "false".
+  # Both Calico and Ciliun cni_plugin values override this value to true automatically, the default is "false".
   # disable_network_policy = true
 
   # If you want to disable the automatic use of placement group "spread". See https://docs.hetzner.com/cloud/placement-groups/overview/
@@ -224,6 +224,14 @@ module "kube-hetzner" {
   # You can enable cert-manager (installed by Helm behind the scenes) with the following flag, the default is "false".
   # enable_cert_manager = true
 
+  # IP Addresses to use for the DNS Servers, set to an empty list to use the ones provided by Hetzner, defaults to ["1.1.1.1", " 1.0.0.1", "8.8.8.8"].
+  # For rancher installs, best to leave it as default.
+  # dns_servers = []
+
+  # When this is enabled, rather than the first node, all external traffic will be routed via a control-plane loadbalancer, allowing for high availability.
+  # The default is false.
+  # use_control_plane_lb = true
+
   # You can enable Rancher (installed by Helm behind the scenes) with the following flag, the default is "false".
   # When Rancher is enabled, it automatically installs cert-manager too, and it uses rancher's own self-signed certificates.
   # See for options https://rancher.com/docs/rancher/v2.0-v2.4/en/installation/resources/advanced/helm2/helm-rancher/#choose-your-ssl-configuration
@@ -235,9 +243,9 @@ module "kube-hetzner" {
   # IMPORTANT: Rancher's install is quite memory intensive, you will require at least 4GB if RAM, meaning cx21 server type (for your control plane).
   # enable_rancher = true
 
-  # When Rancher is deployed, by default is uses the "stable" channel. But this can be customized.
-  # The allowed values are "stable", "latest", and "alpha".
-  # rancher_install_channel = "latest"
+  # When Rancher is deployed, by default is uses the "latest" channel. But this can be customized.
+  # The allowed values are "stable" or "latest".
+  # rancher_install_channel = "stable"
 
   # Here you can set the Rancher hostname, the default is "rancher.example.com".
   # It is a required value when using rancher, but up to you to point the DNS to it or not. 
